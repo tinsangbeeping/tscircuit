@@ -1,0 +1,15 @@
+[
+  {
+    "id": "patch_Test_LED_Circuit",
+    "name": "Test LED Circuit",
+    "filePath": "/workspaces/tscircuit/patches/Test_LED_Circuit_v1.0.0.tscircuit",
+    "metadata": {
+      "name": "Test LED Circuit",
+      "description": "Simple LED with resistor",
+      "version": "1.0.0",
+      "createdAt": "2025-12-12T09:18:01.817Z",
+      "modifiedAt": "2025-12-12T09:18:01.828Z"
+    },
+    "lastUsed": "2025-12-12T09:18:01.828Z"
+  }
+]
