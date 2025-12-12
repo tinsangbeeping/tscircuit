@@ -57,7 +57,10 @@ const server = serve({
 
         const warnings = errors.filter(e => e.severity === "warning").map(e => e.message);
         const filepath = patchManager.savePatch(body);
-        const entry = patchManager.getLibraryEntry(body.metadata?.name || body.id);
+        
+        // 生成相同的 ID 格式來查詢 libraryIndex
+        const patchId = `patch_${body.metadata.name.replace(/\s+/g, "_")}`;
+        const entry = patchManager.getLibraryEntry(patchId);
         
         return new Response(
           JSON.stringify({ patch: entry, warnings: warnings.length > 0 ? warnings : undefined }),
@@ -67,11 +70,23 @@ const server = serve({
 
       if (pathname === "/api/patches/import" && req.method === "POST") {
         const body = await req.json();
-        const filepath = patchManager.importPatch(body);
-        const entry = patchManager.getLibraryEntry(body.metadata?.name || body.id);
-        return new Response(JSON.stringify({ patch: entry }), {
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-        });
+        
+        // importPatch 期望一個檔案路徑，但我們有 JSON 對象
+        // 所以直接保存為 Patch
+        try {
+          const filepath = patchManager.savePatch(body);
+          const patchId = `patch_${body.metadata.name.replace(/\s+/g, "_")}`;
+          const entry = patchManager.getLibraryEntry(patchId);
+          
+          return new Response(JSON.stringify({ patch: entry }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        } catch (error) {
+          return new Response(
+            JSON.stringify({ error: String(error) }),
+            { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+          );
+        }
       }
 
       // Handle CORS preflight
