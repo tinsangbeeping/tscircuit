@@ -1,0 +1,14 @@
+[
+  {
+    "id": "patch_Save_Test_Patch",
+    "name": "Save Test Patch",
+    "filePath": "test-patches/Save_Test_Patch_v1.0.0.tscircuit",
+    "metadata": {
+      "name": "Save Test Patch",
+      "version": "1.0.0",
+      "createdAt": "2025-12-12T08:34:10.929Z",
+      "modifiedAt": "2025-12-12T08:34:10.929Z"
+    },
+    "lastUsed": "2025-12-12T08:34:10.930Z"
+  }
+]

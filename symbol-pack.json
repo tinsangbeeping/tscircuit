@@ -1,0 +1,464 @@
+{
+  "symbols": [
+    {
+      "id": "resistor",
+      "name": "Resistor",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 40\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"20\" x2=\"25\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><rect x=\"25\" y=\"12\" width=\"50\" height=\"16\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"75\" y1=\"20\" x2=\"90\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "resistance": "10k" }
+    },
+    {
+      "id": "capacitor",
+      "name": "Capacitor",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 40\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"20\" x2=\"35\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"35\" y1=\"10\" x2=\"35\" y2=\"30\" stroke=\"black\" stroke-width=\"3\"/><line x1=\"65\" y1=\"10\" x2=\"65\" y2=\"30\" stroke=\"black\" stroke-width=\"3\"/><line x1=\"65\" y1=\"20\" x2=\"90\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "capacitance": "10u" }
+    },
+    {
+      "id": "inductor",
+      "name": "Inductor",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 40\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"20\" x2=\"25\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><path d=\"M 25 20 Q 30 10 35 20 Q 40 30 45 20 Q 50 10 55 20 Q 60 30 65 20 Q 70 10 75 20\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/><line x1=\"75\" y1=\"20\" x2=\"90\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "inductance": "10u" }
+    },
+    {
+      "id": "diode",
+      "name": "Diode",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 40\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"20\" x2=\"40\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><polygon points=\"40,10 40,30 70,20\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"10\" x2=\"70\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"20\" x2=\"90\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "anode", "name": "Anode", "position": "left", "type": "signal" },
+        { "id": "cathode", "name": "Cathode", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "1N4148" }
+    },
+    {
+      "id": "led",
+      "name": "LED",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><polygon points=\"50,50 40,70 60,70\" fill=\"red\" stroke=\"red\" stroke-width=\"1\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"80\" x2=\"50\" y2=\"90\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "anode", "name": "Anode", "position": "top", "type": "signal" },
+        { "id": "cathode", "name": "Cathode", "position": "bottom", "type": "signal" }
+      ],
+      "defaultProperties": { "color": "red" }
+    },
+    {
+      "id": "zener_diode",
+      "name": "Zener Diode",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 40\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"20\" x2=\"40\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><polygon points=\"40,10 40,30 70,20\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"65\" y1=\"10\" x2=\"75\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"30\" x2=\"80\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"20\" x2=\"90\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "anode", "name": "Anode", "position": "left", "type": "signal" },
+        { "id": "cathode", "name": "Cathode", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "voltage": "5.1V" }
+    },
+    {
+      "id": "ground",
+      "name": "Ground",
+      "category": "Power",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"40\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"30\" y1=\"40\" x2=\"70\" y2=\"40\" stroke=\"black\" stroke-width=\"3\"/><line x1=\"40\" y1=\"50\" x2=\"60\" y2=\"50\" stroke=\"black\" stroke-width=\"3\"/><line x1=\"45\" y1=\"60\" x2=\"55\" y2=\"60\" stroke=\"black\" stroke-width=\"3\"/></svg>",
+      "pins": [
+        { "id": "gnd", "name": "GND", "position": "top", "type": "ground" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "vcc",
+      "name": "VCC",
+      "category": "Power",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"90\" x2=\"50\" y2=\"60\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"50\" r=\"15\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"50\" y=\"55\" font-size=\"14\" font-weight=\"bold\" text-anchor=\"middle\" dominant-baseline=\"middle\">+</text></svg>",
+      "pins": [
+        { "id": "vcc", "name": "VCC", "position": "bottom", "type": "power" }
+      ],
+      "defaultProperties": { "voltage": "5V" }
+    },
+    {
+      "id": "switch_spst",
+      "name": "Switch SPST",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 100 40\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"20\" x2=\"40\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"20\" r=\"6\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"60\" y1=\"20\" x2=\"90\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "switch_spdt",
+      "name": "Switch SPDT",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 100 60\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"20\" r=\"6\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"10\" y1=\"20\" x2=\"40\" y2=\"20\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"60\" y1=\"10\" x2=\"90\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"60\" y1=\"30\" x2=\"90\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "common", "name": "Common", "position": "left", "type": "signal" },
+        { "id": "pin1", "name": "1", "position": "right", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "header_2pin",
+      "name": "Header 2-Pin",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 60 80\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"10\" y=\"20\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"30\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"50\" r=\"4\" fill=\"black\"/><text x=\"35\" y=\"40\" font-size=\"10\" text-anchor=\"middle\">2-PIN</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "header_4pin",
+      "name": "Header 4-Pin",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 80 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"10\" y=\"20\" width=\"60\" height=\"80\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"35\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"55\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"75\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"95\" r=\"4\" fill=\"black\"/><text x=\"45\" y=\"60\" font-size=\"10\" text-anchor=\"middle\">4-PIN</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "left", "type": "signal" },
+        { "id": "pin4", "name": "4", "position": "left", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "header_6pin",
+      "name": "Header 6-Pin",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 80 140\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"10\" y=\"20\" width=\"60\" height=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"30\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"45\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"60\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"75\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"90\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"105\" r=\"4\" fill=\"black\"/><text x=\"45\" y=\"65\" font-size=\"10\" text-anchor=\"middle\">6-PIN</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "left", "type": "signal" },
+        { "id": "pin4", "name": "4", "position": "left", "type": "signal" },
+        { "id": "pin5", "name": "5", "position": "left", "type": "signal" },
+        { "id": "pin6", "name": "6", "position": "left", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "header_8pin",
+      "name": "Header 8-Pin",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 80 160\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"10\" y=\"20\" width=\"60\" height=\"120\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"20\" cy=\"28\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"40\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"52\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"64\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"76\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"88\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"100\" r=\"4\" fill=\"black\"/><circle cx=\"20\" cy=\"112\" r=\"4\" fill=\"black\"/><text x=\"45\" y=\"70\" font-size=\"10\" text-anchor=\"middle\">8-PIN</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "left", "type": "signal" },
+        { "id": "pin4", "name": "4", "position": "left", "type": "signal" },
+        { "id": "pin5", "name": "5", "position": "left", "type": "signal" },
+        { "id": "pin6", "name": "6", "position": "left", "type": "signal" },
+        { "id": "pin7", "name": "7", "position": "left", "type": "signal" },
+        { "id": "pin8", "name": "8", "position": "left", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "ic_8pin",
+      "name": "IC 8-Pin DIP",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 120 140\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"20\" width=\"80\" height=\"100\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"20\" r=\"4\" fill=\"black\"/><text x=\"60\" y=\"75\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">DIP8</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "left", "type": "signal" },
+        { "id": "pin4", "name": "4", "position": "left", "type": "signal" },
+        { "id": "pin5", "name": "5", "position": "right", "type": "signal" },
+        { "id": "pin6", "name": "6", "position": "right", "type": "signal" },
+        { "id": "pin7", "name": "7", "position": "right", "type": "signal" },
+        { "id": "pin8", "name": "8", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "DIP8" }
+    },
+    {
+      "id": "ic_14pin",
+      "name": "IC 14-Pin DIP",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 120 180\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"20\" width=\"80\" height=\"140\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"20\" r=\"4\" fill=\"black\"/><text x=\"60\" y=\"95\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">DIP14</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "left", "type": "signal" },
+        { "id": "pin4", "name": "4", "position": "left", "type": "signal" },
+        { "id": "pin5", "name": "5", "position": "left", "type": "signal" },
+        { "id": "pin6", "name": "6", "position": "left", "type": "signal" },
+        { "id": "pin7", "name": "7", "position": "left", "type": "signal" },
+        { "id": "pin8", "name": "8", "position": "right", "type": "signal" },
+        { "id": "pin9", "name": "9", "position": "right", "type": "signal" },
+        { "id": "pin10", "name": "10", "position": "right", "type": "signal" },
+        { "id": "pin11", "name": "11", "position": "right", "type": "signal" },
+        { "id": "pin12", "name": "12", "position": "right", "type": "signal" },
+        { "id": "pin13", "name": "13", "position": "right", "type": "signal" },
+        { "id": "pin14", "name": "14", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "DIP14" }
+    },
+    {
+      "id": "ic_16pin",
+      "name": "IC 16-Pin DIP",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 120 200\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"20\" width=\"80\" height=\"160\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"20\" r=\"4\" fill=\"black\"/><text x=\"60\" y=\"105\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">DIP16</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "left", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "left", "type": "signal" },
+        { "id": "pin4", "name": "4", "position": "left", "type": "signal" },
+        { "id": "pin5", "name": "5", "position": "left", "type": "signal" },
+        { "id": "pin6", "name": "6", "position": "left", "type": "signal" },
+        { "id": "pin7", "name": "7", "position": "left", "type": "signal" },
+        { "id": "pin8", "name": "8", "position": "left", "type": "signal" },
+        { "id": "pin9", "name": "9", "position": "right", "type": "signal" },
+        { "id": "pin10", "name": "10", "position": "right", "type": "signal" },
+        { "id": "pin11", "name": "11", "position": "right", "type": "signal" },
+        { "id": "pin12", "name": "12", "position": "right", "type": "signal" },
+        { "id": "pin13", "name": "13", "position": "right", "type": "signal" },
+        { "id": "pin14", "name": "14", "position": "right", "type": "signal" },
+        { "id": "pin15", "name": "15", "position": "right", "type": "signal" },
+        { "id": "pin16", "name": "16", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "DIP16" }
+    },
+    {
+      "id": "opamp",
+      "name": "Op-Amp",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,20 20,80 80,50\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"30\" y=\"55\" font-size=\"14\" font-weight=\"bold\">+</text><text x=\"50\" y=\"30\" font-size=\"14\" font-weight=\"bold\">−</text></svg>",
+      "pins": [
+        { "id": "in_pos", "name": "In+", "position": "left", "type": "signal" },
+        { "id": "in_neg", "name": "In-", "position": "left", "type": "signal" },
+        { "id": "vcc", "name": "VCC", "position": "top", "type": "power" },
+        { "id": "vee", "name": "VEE", "position": "bottom", "type": "ground" },
+        { "id": "out", "name": "Out", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "LM358" }
+    },
+    {
+      "id": "transistor_npn",
+      "name": "NPN Transistor",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"30\" y1=\"50\" x2=\"50\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/><polygon points=\"50,50 45,35 55,35\" fill=\"black\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"80\" x2=\"50\" y2=\"90\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"20\" y1=\"50\" x2=\"10\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "c", "name": "Collector", "position": "top", "type": "signal" },
+        { "id": "b", "name": "Base", "position": "left", "type": "signal" },
+        { "id": "e", "name": "Emitter", "position": "bottom", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "2N2222" }
+    },
+    {
+      "id": "transistor_pnp",
+      "name": "PNP Transistor",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"30\" y1=\"50\" x2=\"50\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/><polygon points=\"45,50 50,35 50,65\" fill=\"black\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"80\" x2=\"50\" y2=\"90\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"20\" y1=\"50\" x2=\"10\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "c", "name": "Collector", "position": "top", "type": "signal" },
+        { "id": "b", "name": "Base", "position": "left", "type": "signal" },
+        { "id": "e", "name": "Emitter", "position": "bottom", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "2N2907" }
+    },
+    {
+      "id": "mosfet_nch",
+      "name": "N-MOSFET",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"35\" y=\"35\" width=\"30\" height=\"30\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"35\" y1=\"45\" x2=\"25\" y2=\"45\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"80\" x2=\"50\" y2=\"90\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "g", "name": "Gate", "position": "left", "type": "signal" },
+        { "id": "d", "name": "Drain", "position": "top", "type": "signal" },
+        { "id": "s", "name": "Source", "position": "bottom", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "IRF540N" }
+    },
+    {
+      "id": "mosfet_pch",
+      "name": "P-MOSFET",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"35\" y=\"35\" width=\"30\" height=\"30\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"55\" y1=\"45\" x2=\"65\" y2=\"45\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"10\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"80\" x2=\"50\" y2=\"90\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"30\" y1=\"50\" x2=\"10\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "g", "name": "Gate", "position": "right", "type": "signal" },
+        { "id": "d", "name": "Drain", "position": "top", "type": "signal" },
+        { "id": "s", "name": "Source", "position": "bottom", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "IRF9540N" }
+    },
+    {
+      "id": "potentiometer",
+      "name": "Potentiometer",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"15\" r=\"3\" fill=\"black\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "Wiper", "position": "top", "type": "signal" },
+        { "id": "pin3", "name": "3", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "resistance": "10k" }
+    },
+    {
+      "id": "crystal",
+      "name": "Crystal",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 60\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"25\" y=\"15\" width=\"50\" height=\"30\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"35\" y1=\"10\" x2=\"35\" y2=\"15\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"35\" y1=\"45\" x2=\"35\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"65\" y1=\"10\" x2=\"65\" y2=\"15\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"65\" y1=\"45\" x2=\"65\" y2=\"50\" stroke=\"black\" stroke-width=\"2\"/><text x=\"50\" y=\"35\" font-size=\"12\" text-anchor=\"middle\">Xtal</text></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "frequency": "16MHz" }
+    },
+    {
+      "id": "relay",
+      "name": "Relay",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"10\" width=\"60\" height=\"35\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"27\" r=\"8\" fill=\"none\" stroke=\"black\" stroke-width=\"1\"/><line x1=\"10\" y1=\"55\" x2=\"30\" y2=\"55\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"55\" x2=\"90\" y2=\"55\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"30\" y1=\"55\" x2=\"50\" y2=\"70\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"55\" x2=\"50\" y2=\"70\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "coil1", "name": "Coil+", "position": "left", "type": "signal" },
+        { "id": "coil2", "name": "Coil-", "position": "bottom", "type": "signal" },
+        { "id": "no", "name": "NO", "position": "right", "type": "signal" },
+        { "id": "nc", "name": "NC", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "voltage": "5V" }
+    },
+    {
+      "id": "pushbutton",
+      "name": "Push Button",
+      "category": "Connector",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"50\" r=\"10\" fill=\"lightgray\" stroke=\"black\" stroke-width=\"1\"/><line x1=\"50\" y1=\"70\" x2=\"50\" y2=\"90\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "top", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "bottom", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "buzzer",
+      "name": "Buzzer",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><polygon points=\"50,40 45,55 55,55\" fill=\"black\"/><path d=\"M 65 35 Q 75 45 75 50 Q 75 55 65 65\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/></svg>",
+      "pins": [
+        { "id": "pin1", "name": "1", "position": "left", "type": "signal" },
+        { "id": "pin2", "name": "2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "frequency": "4kHz" }
+    },
+    {
+      "id": "transformer",
+      "name": "Transformer",
+      "category": "Passive",
+      "svg": "<svg viewBox=\"0 0 100 60\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"30\" cy=\"30\" r=\"12\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"70\" cy=\"30\" r=\"12\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"10\" y1=\"30\" x2=\"18\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"82\" y1=\"30\" x2=\"90\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"30\" y1=\"15\" x2=\"30\" y2=\"8\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"70\" y1=\"15\" x2=\"70\" y2=\"8\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "pri1", "name": "P1", "position": "left", "type": "signal" },
+        { "id": "pri2", "name": "P2", "position": "left", "type": "signal" },
+        { "id": "sec1", "name": "S1", "position": "right", "type": "signal" },
+        { "id": "sec2", "name": "S2", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "ratio": "1:1" }
+    },
+    {
+      "id": "and_gate",
+      "name": "AND Gate",
+      "category": "Logic",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 20 10 L 50 10 Q 80 10 80 40 Q 80 70 50 70 L 20 70 Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"40\" y=\"50\" font-size=\"20\" font-weight=\"bold\" text-anchor=\"middle\">&amp;</text></svg>",
+      "pins": [
+        { "id": "in1", "name": "A", "position": "left", "type": "signal" },
+        { "id": "in2", "name": "B", "position": "left", "type": "signal" },
+        { "id": "out", "name": "Y", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "or_gate",
+      "name": "OR Gate",
+      "category": "Logic",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 30 10 L 50 10 Q 80 10 80 40 Q 80 70 50 70 L 30 70 Q 20 55 20 40 Q 20 25 30 10\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"50\" y=\"50\" font-size=\"20\" font-weight=\"bold\" text-anchor=\"middle\">1</text></svg>",
+      "pins": [
+        { "id": "in1", "name": "A", "position": "left", "type": "signal" },
+        { "id": "in2", "name": "B", "position": "left", "type": "signal" },
+        { "id": "out", "name": "Y", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "not_gate",
+      "name": "NOT Gate",
+      "category": "Logic",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,10 70,40 20,70\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"75\" cy=\"40\" r=\"5\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/></svg>",
+      "pins": [
+        { "id": "in", "name": "A", "position": "left", "type": "signal" },
+        { "id": "out", "name": "Y", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "nand_gate",
+      "name": "NAND Gate",
+      "category": "Logic",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 20 10 L 50 10 Q 70 10 70 40 Q 70 70 50 70 L 20 70 Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><circle cx=\"75\" cy=\"40\" r=\"5\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"40\" y=\"50\" font-size=\"16\" font-weight=\"bold\" text-anchor=\"middle\">&amp;</text></svg>",
+      "pins": [
+        { "id": "in1", "name": "A", "position": "left", "type": "signal" },
+        { "id": "in2", "name": "B", "position": "left", "type": "signal" },
+        { "id": "out", "name": "Y", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "flip_flop",
+      "name": "Flip-Flop",
+      "category": "Logic",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"10\" width=\"60\" height=\"60\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"50\" y=\"50\" font-size=\"14\" font-weight=\"bold\" text-anchor=\"middle\">FF</text></svg>",
+      "pins": [
+        { "id": "clk", "name": "CLK", "position": "left", "type": "clock" },
+        { "id": "d", "name": "D", "position": "left", "type": "signal" },
+        { "id": "q", "name": "Q", "position": "right", "type": "signal" },
+        { "id": "qn", "name": "Q'", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "multiplexer",
+      "name": "Multiplexer",
+      "category": "Logic",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,10 70,10 85,50 70,90 20,90 35,50\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"50\" y=\"55\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">MUX</text></svg>",
+      "pins": [
+        { "id": "in0", "name": "I0", "position": "left", "type": "signal" },
+        { "id": "in1", "name": "I1", "position": "left", "type": "signal" },
+        { "id": "sel", "name": "S", "position": "top", "type": "signal" },
+        { "id": "out", "name": "Y", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": {}
+    },
+    {
+      "id": "comparator",
+      "name": "Comparator",
+      "category": "Analog",
+      "svg": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,20 20,80 80,50\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"30\" y=\"35\" font-size=\"12\" font-weight=\"bold\">+</text><text x=\"30\" y=\"65\" font-size=\"12\" font-weight=\"bold\">−</text></svg>",
+      "pins": [
+        { "id": "in_pos", "name": "In+", "position": "left", "type": "signal" },
+        { "id": "in_neg", "name": "In-", "position": "left", "type": "signal" },
+        { "id": "out", "name": "Out", "position": "right", "type": "signal" }
+      ],
+      "defaultProperties": { "type": "LM393" }
+    },
+    {
+      "id": "voltage_regulator",
+      "name": "Voltage Regulator",
+      "category": "Active",
+      "svg": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"15\" width=\"60\" height=\"50\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><text x=\"50\" y=\"50\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\">REG</text></svg>",
+      "pins": [
+        { "id": "in", "name": "Vin", "position": "left", "type": "power" },
+        { "id": "gnd", "name": "GND", "position": "bottom", "type": "ground" },
+        { "id": "out", "name": "Vout", "position": "right", "type": "power" }
+      ],
+      "defaultProperties": { "type": "LM7805" }
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+Copilot instruction: wire the patch system into the schematic editor (codespace-scaling-fiesta branch)
+Objective (what must become visible in UI)
+
+In http://localhost:5176 (schematic-editor), user can select components + nets and click Save as Patch.
+
+Patch appears in sidebar under Patches immediately.
+
+Clicking a patch inserts it into canvas (MVP: “expand insertion” — drop its internal components and nets).
+
+Patch list persists across reload (saved on backend filesystem under /workspaces/tscircuit/patches/).
+
+Why this is necessary
+
+Patch storage/CRUD already exists in /workspaces/tscircuit/lib/patch-manager.ts 
+
+PHASE_1_4_IMPLEMENTATION_SUMMARY
+
+ but schematic-editor is a browser app and cannot write to disk directly. So we must add API endpoints in /workspaces/tscircuit/server.ts and call them from the editor.
+
+Part 1 — Add Patch API endpoints to /workspaces/tscircuit/server.ts
+Implement these REST endpoints (JSON)
+
+Use PatchManager from lib/patch-manager.ts (Phase 1 feature set includes save/load/import/export + indexing + backup) 
+
+PHASE_1_4_IMPLEMENTATION_SUMMARY
+
+Endpoints:
+
+GET /api/patches → returns list of patches (id, name, updatedAt, interfacePins count)
+
+GET /api/patches/:id → returns full patch JSON
+
+POST /api/patches → body: patch JSON → validates → saves → returns saved patch metadata
+
+POST /api/patches/import → body: patch JSON (or file content) → saves → returns metadata
+
+(Optional later) DELETE /api/patches/:id
+
+Rules:
+
+On POST /api/patches, call validatePatch from lib/patch.ts (Phase 1 validator exists) 
+
+PHASE_1_4_IMPLEMENTATION_SUMMARY
+
+If errors: HTTP 400 with {errors:[...], warnings:[...]}
+
+If warnings only: still save, but include warnings in response.
+
+Persistence:
+
+Store in /workspaces/tscircuit/patches/ (project structure recommended by Phase 4) 
+
+PHASE_1_4_IMPLEMENTATION_SUMMARY
+
+Part 2 — Add Patch client + UI to /workspaces/schematic-editor
+
+From the setup guide, the key files are:
+
+/workspaces/schematic-editor/src/components/SchematicCanvas.tsx
+
+/workspaces/schematic-editor/src/components/ComponentSidebar.tsx
+
+data models in /workspaces/schematic-editor/src/lib/schematic.ts 
+
+SETUP_GUIDE
+
+A) Create src/lib/patchApi.ts
+
+Functions:
+
+listPatches(): Promise<PatchMeta[]> (GET /api/patches)
+
+savePatch(patch: any): Promise<{patch: PatchMeta, warnings?: string[]}> (POST /api/patches)
+
+getPatch(id: string): Promise<any>
+
+importPatch(patchJson: any): Promise<PatchMeta>
+
+B) Sidebar: make “Patches” dynamic (NOT hardcoded)
+
+In ComponentSidebar.tsx:
+
+Replace the current “Predefined Patches” list with state from listPatches()
+
+Load on mount; add “Refresh” icon/button
+
+Clicking a patch triggers onInsertPatch(patchId)
+
+C) Canvas: selection + Save Patch button (minimum viable)
+
+In SchematicCanvas.tsx:
+
+Implement multi-select for components (click selects, shift+click toggles, click empty clears)
+
+Add top bar button “Save Patch” (disabled unless >=2 selected components)
+
+On click:
+
+prompt for patch name
+
+call a helper extractPatchFromSchematic(schematicState, selectedIds)
+
+POST to /api/patches
+
+if success: show toast “Saved patch X” and refresh sidebar patches
+
+if validation errors: show modal list and do not save (these rules exist in Phase 2 connectivity validation too) 
+
+PHASE_1_4_IMPLEMENTATION_SUMMARY
+
+D) Implement extractPatchFromSchematic(...) based on the editor’s current JSON model
+
+Your exported schematic JSON format is:
+
+components[] each has {id,type,name,x,y,rotation,properties} 
+
+My Circuit-2025-12-12
+
+connections[] each has {id, net, connections: ["U1.pa9","U2.t1in"]} 
+
+My Circuit-2025-12-12
+
+So implement:
+
+selectedComponents = components.filter(c => selectedIds.has(c.id))
+
+For each net in connections[]:
+
+endpoint strings are "ComponentName.PinName" (split at ".")
+
+A net is internal if all endpoints belong to selected components’ name fields
+
+A net contributes interface pins if it touches at least one selected endpoint and at least one non-selected endpoint
+
+Interface pin format can be simple MVP:
+
+{ name: "<component>.<pin>", net: "<netName>" } or whatever patch.ts expects (backend can normalize)
+
+E) Insert patch behavior (MVP = expand insertion)
+
+When sidebar patch is clicked:
+
+patch = await getPatch(id)
+
+“expand insertion”:
+
+add patch.components to schematic state with x/y offset (e.g. +80,+80)
+
+add patch.nets to schematic connections, remapping ids to avoid collisions
+
+show toast “Inserted patch X”
+
+This gives instant visible usefulness, even before a fancy “patch block symbol”.
+
+Part 3 — Fix Import so it can import patches OR schematics
+
+Your current Import probably assumes “schematic JSON” (like your file) 
+
+My Circuit-2025-12-12
+
+.
+
+Modify Import handler:
+
+If JSON has components + connections → treat as schematic load (existing behavior)
+
+Else if JSON looks like PatchData (backend can also detect) → call patchApi.importPatch(json) then refresh patch list

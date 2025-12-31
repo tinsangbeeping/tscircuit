@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "name": "Save Test Patch",
+    "version": "1.0.0",
+    "createdAt": "2025-12-12T08:34:10.929Z",
+    "modifiedAt": "2025-12-12T08:34:10.929Z"
+  },
+  "components": [
+    {
+      "id": "r1",
+      "name": "R1",
+      "type": "resistor",
+      "properties": {
+        "resistance": "10k"
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "nets": [],
+  "interfacePins": []
+}

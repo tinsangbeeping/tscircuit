@@ -1,0 +1,167 @@
+Roadmap for Enhancing the Schematic Editor & SVG Viewer
+Introduction
+
+This roadmap outlines a spec-driven plan to enhance the IDE-like schematic editor and SVG viewer for electronic circuit design. The plan introduces patch-based design (reusable subcircuits), an expanded symbol library, ELK-based connectivity verification and auto-layout, integrated patch editing tools, improved file/project management, and forward-looking extensibility. The development is structured into phases with clear deliverables, architecture considerations, and action steps. Emphasis is placed on prioritizing patch editing functionality and ELK-powered verification first, while ensuring a modular architecture and good developer ergonomics throughout.
+
+Phase 1: Patch-Based Design Paradigm & Patch Editor Tooling
+
+Goal: Introduce “patches” as reusable subcircuits and allow editing them within the editor. A patch is a logical grouping of components (e.g. a voltage regulator circuit or an SPI module) that forms a self-contained functional block
+docs.tscircuit.com
+. Users should be able to save a patch and later reuse it like a component symbol in other designs. This phase focuses on the data structures and UI needed to create, save, load, and edit patches.
+
+Patch Data Model & Format: Define a data structure for patches consistent with the open-source tscircuit ecosystem. Each patch will be saved as a .tscircuit file, using tscircuit’s Circuit JSON schema as the format. (Circuit JSON is a universal format for electronic circuits containing all schematic/PCB info
+docs.tscircuit.com
+.) This ensures maximum compatibility and future integration with tscircuit tools. The patch JSON should include the subcircuit’s components, nets, and interface pins (pins that connect the patch to the outside world).
+
+Saving and Loading Patches: Implement functionality to save any selected set of components/nets from the main schematic as a patch file. Conversely, allow users to load/import a .tscircuit patch file, which inserts that subcircuit into the current schematic as a single unit. This essentially treats the patch as a new symbol/component. The imported patch should appear with a distinct symbol (a “block” representing the subcircuit) and have clearly defined connection points for its interface pins.
+
+Patch Symbol Representation: Design a visual representation for patch instances in the schematic. By default, a patch can be shown as a labeled rectangular symbol with pins on its perimeter (like an IC or subcircuit block). Optionally, support a custom symbol graphic for the patch. (In tscircuit, the <symbol /> element allows custom schematic shapes for a component
+docs.tscircuit.com
+ – a similar approach could let advanced users define how a patch appears as an icon.) For now, a generic container with pin ports is sufficient, but the architecture should allow extending this to custom drawings later.
+
+Patch Editing Mode: Create a dedicated Patch Editor interface to modify a patch’s internal schematic. For example, when a user double-clicks a patch symbol (or chooses “Edit Patch” from context menu), the editor should open the patch in a separate tab or panel (mimicking VS Code’s multi-tab interface). In this mode, the user can drag-and-drop components from the symbol library into the patch, wire them together, and define which nodes are external pins (interface of the patch). The UI should clearly indicate that the user is inside a patch context (e.g., a breadcrumb like Project ► PatchName). Developer ergonomics note: this can be implemented as a separate Angular component/route for patch editing, keeping the code modular.
+
+Real-time Patch Validation: Provide immediate feedback while editing patches. As the user wires components, the editor should flag electrical rule errors such as unconnected pins or nets. For instance, if a component pin remains floating (unwired) inside the patch, highlight it and maybe show a warning icon. In professional EDA tools, leaving a pin not wired to the rest of the circuit triggers a warning or error
+altium.com
+, so our editor will do similarly. Likewise, if a net is drawn but not connected to anything on one end, prompt the user. This real-time validation ensures patches are “fully connected subcircuits” before they’re saved.
+
+Patch Library Management: As users create patches, maintain a library (list) of available patches within the tool. Provide a panel (similar to a symbol library browser) where users can see saved patches, with options to insert them into the schematic. This could be backed by a simple JSON index or the filesystem (see Phase 4 for persistence). In this phase, the focus is on functionality; a basic list of patch names is acceptable.
+
+Deliverables (Phase 1): By the end of Phase 1, the editor will support creating a patch from selected schematic items, saving it to a .tscircuit file, inserting that patch as a reusable symbol, and editing the patch’s internals in a separate view. The system will enforce that patches have no floating connections (every pin inside either connects internally or is exposed as an interface). This establishes the core patch-based design paradigm
+docs.tscircuit.com
+ for the tool.
+
+Phase 2: ELK-Based Connectivity Verification & Auto-Layout
+
+Goal: Integrate the Eclipse Layout Kernel (ELK) to analyze and improve circuit connectivity and layout. The primary aim is to verify connection integrity – ensuring every pin that should be connected is indeed connected – and secondarily to assist with automatic arrangement of schematic elements for clarity. ELK will treat the schematic as a graph of nodes (components pins) and edges (wires) to validate and layout. Layout improvements are welcome, but connection correctness takes priority.
+
+Graph Model Integration: Use the ELK JavaScript library (elkjs) to represent the schematic’s internal graph. Each component/pin can be a node, and each net (wire) an edge in the ELK graph. The editor will have a conversion routine to translate the JointJS diagram model into an ELK graph structure
+eclipse.dev
+. Once integrated, this allows running ELK’s algorithms on our schematic data.
+
+Automatic Connectivity Checks: Leverage ELK (or even direct graph analysis) to find connectivity issues. ELK itself focuses on layout, but by traversing the ELK graph we can identify any isolated nodes or subgraphs. For example, if a pin is not connected to anything, it will appear as a single-node component in the graph with no edges – our code can detect that and flag it. The tool should warn about any net that has only one pin connected or any component with required pins left unconnected. (In Altium’s compiler, an “Unconnected pin” violation is raised when a pin or port isn’t wired into the circuit
+altium.com
+.) Implement a similar rule: after each edit (or on-demand), run a connectivity check and display a list of warnings (e.g., “U5 pin 3 is unconnected”). This ensures the electrical correctness of the schematic.
+
+ELK Auto-Layout Feature: Utilize ELK to auto-arrange components for better readability. JointJS+ already demonstrates automatic diagram layouts using ELK
+jointjs.com
+ – we will adopt that capability. Provide a user-triggered “Auto-Layout” command that, when invoked, runs the ELK layout algorithm to reposition symbols and reroute connections in a neat manner. This can help especially after inserting a new patch or a cluster of components. Architecture-wise, we might create a LayoutService that handles calling ELK and applying the new coordinates to the JointJS diagram.
+
+Layout Configuration: Allow some basic configurations for the layout engine. For instance, users might specify a layout direction (left-to-right flow vs top-down). Initially, a default hierarchical or orthogonal layout from ELK can be used. Since layout aesthetics are secondary, we can start with ELK’s default settings that prioritize minimal crossing and spacing. Over time, expose more options (like treating patches as enclosed subgraphs that shouldn’t be broken apart, etc.).
+
+Real-time vs On-Demand Layout: Decide when to apply ELK layout. Continuous real-time layout (after every connection) might be computationally heavy for large circuits; instead, consider on-demand or batched updates. A good approach is to run a quick connectivity check on every change (lightweight, just analyzing the graph topology) to catch errors, but run the full auto-layout only when triggered or when the user finishes a major edit (perhaps on mode switch or manual command). This ensures the editor remains responsive.
+
+Deliverables (Phase 2): By the end of this phase, the schematic editor will include a connectivity verification system (powered by graph logic, with any unconnected pins/nets highlighted to the user) and an auto-layout feature (using ELK to neatly arrange schematic symbols). Users can trust that if no warnings are shown, all pins are properly connected. The auto-layout will make patch placement and overall schematic organization easier, although users can still fine-tune positioning manually if desired. The underlying integration with ELK sets the stage for more advanced layout and routing aids in future phases
+jointjs.com
+.
+
+Phase 3: Expanded SVG Symbol Library & Rendering Validation
+
+Goal: Greatly increase the number and variety of supported schematic symbols, and ensure they render correctly in the SVG viewer. Currently, the symbol set may be limited; this phase will incorporate a wide range of standard electronics symbols (from resistors and capacitors to microcontrollers, connectors, etc.), ideally leveraging the tscircuit registry or symbol repository. We will also implement automated rendering tests to catch any SVG parsing issues, and define fallback representations for complex symbols if needed.
+
+Integrate TSCircuit Symbol Library: Utilize the open-source tscircuit schematic-symbols collection as a primary source of SVG symbols. The tscircuit project provides a registry of schematic symbols (and possibly an NPM package or JSON of symbols). If available, we will import this library directly. For example, the tscircuit symbol repo suggests adding an SVG file for a new symbol and running a generator to incorporate it
+github.com
+. We can pull in the pre-generated symbols from this project. This could mean adding a dependency or a one-time import of their symbols.json or similar. By doing so, the editor instantly gains a large library of community-vetted symbols.
+
+Automated Symbol Rendering Validation: Create a test harness that attempts to render each symbol in the library in the SVG viewer. This can be a headless routine that goes through all symbols and checks for errors or obvious visual issues (if the rendering engine can report bounding boxes or missing elements). In the tscircuit symbol development process, after adding a new SVG, developers run tests to ensure the symbol renders correctly (comparing to snapshots)
+github.com
+. We will adopt a similar practice: for every symbol added or updated, include a snapshot test or at least a console validation that it produces an <svg> output with expected elements. This helps catch any symbols that our viewer cannot handle (for example, if certain SVG features aren’t supported by the rendering component).
+
+Address Rendering Limitations: Document any limitations of the current SVG rendering engine and implement fallbacks. If some complex symbols (perhaps those with advanced SVG filters or too many layers) fail to render, the system should detect that and instead render a simplified placeholder (such as a generic box with the component’s reference label). The goal is that no component is completely invisible or broken on the schematic. For instance, if an op-amp symbol’s bezier curves don’t render correctly, a fallback could show a triangle outline. Highlight these instances in the UI so developers know to improve the renderer later.
+
+Expand Symbol Set Coverage: Ensure that common circuits can be drawn without missing symbols. That means including symbols for basic logic gates, amplifiers, transistors, connectors, etc., in addition to passives. If the tscircuit registry has gaps, consider supplementing from other SVG libraries or drawing simple ones via <schematicline> primitives. For quick wins, include template symbols: e.g., a generic box symbol with configurable pin count for ICs (so even if a specific IC symbol is not in the library, the user can use a generic symbol and label the pins).
+
+Symbol Library UI Enhancements: With many more symbols, improve the symbol selection interface. Group symbols into categories (e.g., Power Sources, Analog, Digital, Connectors, Patches etc.). Use a collapsible tree or a searchable list (PrimeNG’s Tree component can display hierarchical libraries
+primeng.org
+). This lets users quickly find the symbol they need. A search bar can filter symbols by name or keyword. These improvements will make the growing library manageable and user-friendly.
+
+Testing New Symbols in Patches: Verify that the new symbols can be used inside patches and on main schematics alike. This simply means testing insertion, connection, and ensuring the symbol’s ports connect properly to nets. The data model might need to map symbol definitions to electrical connection points; ensure this mapping is updated for all new symbol types.
+
+Deliverables (Phase 3): After this phase, the editor will support a much broader range of symbols for schematic drawing. All symbols will be SVG-rendered and validated for correctness. Users should rarely, if ever, need to resort to external tools due to a missing symbol. The symbol library panel will be organized for easy navigation. Any rendering quirks will be documented with interim solutions (so the schematics remain complete). We essentially align our symbol support with what tscircuit’s ecosystem offers, reusing their proven symbol definitions where possible
+github.com
+.
+
+Phase 4: File & Project Management Enhancements
+
+Goal: Implement basic file and project management capabilities, focusing on patch-level persistence and modular design files. Users should be able to save patches and main schematics to the local filesystem (or browser storage), import/export them, and manage versions. This phase establishes the groundwork for organizing complex projects made of multiple schematic modules.
+
+Patch Persistence Format: Each patch (subcircuit) will be saved as its own file (.tscircuit extension). Internally, this is essentially a JSON file following the Circuit JSON spec for that subcircuit. Using Circuit JSON ensures that the file contains all information needed for schematic (and even PCB, simulation, etc., if extended)
+github.com
+. It also means our saved patches could be loaded by other tools supporting tscircuit’s format, providing forward compatibility. Include in the patch JSON some metadata, like the patch name, a version number or timestamp, and perhaps tags or description.
+
+Local Database (LowDB) for Project State: For a lightweight solution without requiring a full server, use a JSON-based database like LowDB to store user data
+github.com
+. LowDB can operate in-browser or in an Electron app, writing to a simple db.json on disk. We can utilize it to keep track of available patch files, user settings, and project manifests. For example, when a patch is saved, record its filename and metadata in the DB; the symbol library panel can read from this DB to list available patches. This approach avoids complex setup and is easy for developers (since using it is as simple as reading/writing JSON).
+
+Import/Export Functionality: Add UI options to import a .tscircuit file (bringing a patch or a full schematic into the workspace) and export the current schematic or patch. For instance, a “File” menu with Import Patch (which loads a patch JSON and adds to library) and Export Schematic (which saves the entire project as one or more files). Ensure that when exporting a full schematic that contains patches, the patches are included (either embedded in one file or as separate files in a zip). Initially, keeping it simple: allow exporting the main schematic as a JSON and each patch as its own JSON. The import process should handle both individual patches and possibly a combined project file.
+
+Modular Project Structure: Define a clear structure for multi-file projects. Since eventually we may have a project with many patches, consider a project file (like a JSON manifest) that references multiple schematic files. For now, we can treat the main schematic as the “project” and patches as included modules. A good practice is to have a dedicated folder for a project: e.g., a project folder containing main.tscircuit and a patches/ subfolder with all patch .tscircuit files. This mimics how code projects are organized and will feel natural to developers. In the UI, represent this structure in a file explorer view (like an IDE). For example, show the project name, under it list the main file and sub-items for patches. Users can double-click a patch in this tree to edit it (triggering Phase 1’s patch editor).
+
+Versioning and Backups: Implement rudimentary version control at least for patches. This could be as simple as keeping a history of saved versions of a patch (perhaps in the LowDB or by timestamped files). For instance, each time a patch is saved, make a copy of the old version in a .backup folder or increment a version number in the file name. This way, if an edit goes wrong, the user (or developer) can restore an earlier version. In the future, integration with Git or other VCS can be planned, but even a basic backup system adds safety. Indicate the patch version in its metadata so that if a project references a specific version of a patch, it’s clear.
+
+File Operations & UX: Enhance the editor’s menu and toolbars to include standard file operations: New, Open, Save, etc., for both schematics and patches. Make sure these operations are intuitive. For example, New Patch could prompt the user to name the patch, then open a blank patch editor canvas. Save Patch will write to the appropriate .tscircuit file (or prompt for location if not set). Where applicable, use native file dialogs (in Electron or browser download prompts) to let the user choose locations. Aim to replicate the familiar ergonomics of an IDE or EDA tool, where users can manage files easily.
+
+Consistency & Integrity: When implementing file management, guard against broken references. For instance, if a user deletes or moves a patch file that a schematic is using, the editor should handle it (warn the user or prompt to locate the file). This might involve storing unique IDs for patches and referring to them in the main schematic by ID, so that even if names change, the linkage can be recovered. Such considerations will become more important as projects grow, but it’s good to design the data referencing system now (e.g., the main schematic JSON could list included patch filenames or IDs).
+
+Deliverables (Phase 4): At the end of this phase, users will be able to persist their work effectively. Patches and schematics can be saved to disk and loaded, enabling sharing and iterative design. The application will support a modular project structure, with the groundwork laid for handling multi-file projects. Although this is initially local-file based (or browser storage), it establishes patterns (file trees, manifests) that will allow later expansion into cloud storage or collaborative platforms. Developer-wise, having a clear file structure and using a JSON DB means easier debugging (one can inspect the JSON files directly) and straightforward state management moving forward
+github.com
+.
+
+Phase 5: Forward Compatibility and Future Extensions
+
+Goal: Ensure the system’s design will accommodate future features, notably AI-assisted design (automatic patch generation from datasheets or specifications) and comprehensive project management (multiple sheets, integrated PCB view, etc.). This phase is more of an ongoing architectural guideline than an immediate coding task – we will outline how to keep the system extensible and aligned with upcoming needs.
+
+AI-Assisted Patch Generation (Future): Plan the architecture such that an AI module can be integrated later. For example, envision a feature where a user uploads a component datasheet PDF, and the tool’s AI suggests a patch (subcircuit) implementing that component’s typical application circuit. To enable this, our patch creation pipeline should be modular. We should separate the patch definition logic (data model and file format) from the UI, so that in the future a script or service could populate a Patch object with components and connections. By storing patches in the standardized Circuit JSON format, we make it easier for external tools (including AI algorithms) to create or modify them, since Circuit JSON is a well-documented, machine-friendly format
+github.com
+. In short, if our editor can do it, a script should be able to do it – this principle will guide exposing APIs or hooks for automation.
+
+Extensible Component and Symbol Models: As new types of components or symbols emerge (or as tscircuit updates its library), ensure the system can intake those without major refactoring. This means using a flexible schema for components (perhaps keyed by a type identifier that can be extended). For symbols, if we encounter a symbol that doesn’t exist, the system could allow a user or plugin to define it on the fly (using primitives like lines and circles). Architecturally, having a SymbolFactory or similar mechanism (where new symbol definitions can be registered at runtime) would be useful. This will also aid integration of AI: an AI might generate a new symbol shape for a custom IC, and the system should be able to incorporate that (possibly by writing a new SVG or using the <symbol> primitives to draw it).
+
+Full Project State Management: In the future, the editor may manage not just schematics and patches, but also PCB layouts, simulation data, BOMs, etc. Our current file structure (with Circuit JSON) already can encapsulate much of this (Circuit JSON is designed to hold schematic, PCB, BOM, simulation info all together
+github.com
+). To remain forward-compatible, we should maintain compatibility with the Circuit JSON spec as it evolves. If we save data in a way that’s conformant, we can later merge our file model with a full project package (for example, tscircuit’s export format). Keep an eye on tscircuit’s updates: if they move toward a single file with all project data or some package format, consider adopting that when appropriate. Our use of .tscircuit files could transition to that seamlessly if we don’t deviate from the standard.
+
+Plugin Architecture: Consider designing parts of the system as plugins or at least well-isolated services. For example, the AI integration could be a plugin that can be enabled or disabled. The simulation feature (if one is added to simulate circuits) might be another plugin. By keeping the core editor lean and having clearly defined extension points (e.g., an “Analyze” menu where new tools can be added), we prepare the ground for future growth. Concretely, this could mean using an event bus or service in Angular where different features can subscribe or inject functionality (for instance, a “Generate Patch from AI” button that calls an AI service). In terms of file structure, we might have a plugins/ or extensions/ folder in the project to house these future additions separately from core code.
+
+Scalability & Performance: As the project grows in scope, performance could become an issue (very large schematics, many patches, etc.). Anticipate this by choosing algorithms and data structures that scale. The use of ELK for layout is one such decision – ELK is designed for large graphs. We should also consider using web workers for heavy computations (like AI parsing or large layout operations) so the UI stays responsive. From a developer standpoint, having clear demarcation of which code can run off the main thread (e.g., a BackgroundWorker class for performing auto-routing or AI tasks) will be beneficial. This separation might not be fully implemented now, but the design should not preclude it.
+
+Developer Ergonomics for Future Work: Document the system architecture as it stands after Phase 4, so that future contributors (who might work on AI integration or other features) can easily understand the system. A new developer should be able to read the spec (and code comments) and see, for example, “aha, there’s a PatchService that handles all patch-related CRUD, and a LayoutService for ELK – I can extend those or use them for new features.” Maintaining a clean, modular structure (as described in previous phases) is key to this. For instance, if an AI feature wants to add a new patch, it should call a well-defined method (like PatchService.createPatchFromData(data)) rather than manipulate the diagram directly – so we should build such methods now.
+
+Deliverables (Phase 5 and beyond): This phase doesn’t produce a user-facing feature immediately, but rather ensures longevity and adaptability of the platform. The deliverable is an updated specification/architecture document (living documentation) that reflects the final design after implementing phases 1–4, with notes on how upcoming features (AI-driven design suggestions, multi-sheet projects, etc.) would fit in. By adhering to open standards and modular design, the enhanced schematic editor will be well-poised to incorporate cutting-edge features when the time comes, without requiring a ground-up rewrite.
+
+Architecture & Developer Experience Considerations
+
+Throughout all phases, careful attention is given to the architecture, code organization, and developer ergonomics:
+
+Modular Code Organization: Structure the application into clear modules corresponding to features. For example, a PatchModule (responsible for patch data structures, patch editor UI, patch import/export), a LayoutModule (for ELK integration and graph analysis), and a LibraryModule (for symbols and assets). In Angular terms, this could mean separate NgModules or at least services grouped logically. This modularity makes it easier for multiple developers to work in parallel and for future extensions to be added with minimal impact on existing code.
+
+Clear File Structure: Organize the project files to mirror the logical separation. One suggestion is:
+
+src/app/patches/ – contains components like PatchEditorComponent, services like PatchService, and models (classes or interfaces for Patch).
+
+src/app/schematic/ – contains the main schematic editor component, and perhaps a SchematicService for overall project management.
+
+src/app/symbols/ – includes the symbol library logic, maybe a SymbolService that loads symbols (possibly parsing SVGs or importing JSON), and any components for symbol palettes.
+
+src/app/layout/ – for layout and connectivity, e.g., a LayoutService that wraps ELK layout calls, and perhaps a ConnectivityChecker utility.
+
+Additionally, keep shared or core utilities in a shared folder if needed (for things like common interfaces, helper functions).
+This organization ensures a developer can quickly find relevant code (e.g., all patch-related code is in one place). It also aids in testing, since modules can be tested in isolation.
+
+Use of PrimeNG and Angular UI Paradigms: Leverage PrimeNG components to speed up UI development and keep the interface professional. For instance, use a PrimeNG Tree for the project explorer (to display the file hierarchy of schematic and patches)
+primeng.org
+, a Splitter for resizable panels (to achieve a VS Code-like layout with a sidebar, editor area, etc.), and TabView for multi-tab editing (so the main schematic and an open patch can be tabs). These ready-made components will save time and ensure consistency. The developer ergonomics benefit from this because less custom CSS/HTML is needed, and we get cross-browser tested components out of the box.
+
+Developer Tools & Scripts: Introduce utility scripts inspired by tscircuit’s development process. For example, if we maintain our own symbol assets, provide an NPM script to batch convert or optimize SVGs. If there is a build step to generate symbol definitions (as seen in tscircuit’s repo, where bun run generate creates symbol TS files from SVGs
+github.com
+), integrate that into our build. This way, adding a new symbol as a developer is straightforward (just drop an SVG in the folder and run the script). Similarly, include scripts for running the ELK layout on a test schematic, or exporting a test project – useful for debugging. A well-documented README for developers should list these common tasks, improving onboarding.
+
+Testing and QA: Encourage a testing culture from the start. Utilize unit tests for critical logic (e.g., PatchService methods, ensuring that saving and loading a patch preserves all connections). Incorporate integration tests for the UI if possible (like using Protractor or Cypress to simulate user actions: create patch, connect pins, run auto-layout, etc.). The earlier phases already propose specific tests (symbol rendering snapshots, connectivity checks); integrating those into a CI pipeline will catch regressions. For developer ergonomics, quick feedback from tests is invaluable.
+
+Performance Monitoring: As features are added, monitor performance (both runtime and memory). Provide developers with debug options, such as a mode to highlight how many ELK recalculations are happening or a log of patch load times. This helps tune the implementation (for example, if auto-layout is slow for large patches, developers can decide to optimize or change strategy). Keep the option to disable certain heavy features in dev mode to isolate issues (e.g., a flag to turn off ELK auto-layout when focusing on symbol rendering work). A smooth-running editor is not just good for users but also means developers don’t waste time dealing with lag when testing changes.
+
+Consistency and Coding Standards: Maintain consistency in the codebase by adopting a style guide (possibly Angular’s recommended practices or Airbnb’s TS style). Use descriptive naming for classes and methods (e.g., prefer savePatchToFile() over saveData()), which makes the code self-documenting. Leverage TypeScript’s interfaces to define clear contracts – for instance, define an interface IPatch that lists all properties a patch JSON should have. This not only prevents errors but also serves as documentation for other developers or future maintainers.
+
+Developer Documentation: As a deliverable alongside the code, update the developer manual or technical spec at each phase. By Phase 4, we should have a comprehensive description of the system’s architecture (which can be an updated version of this roadmap document, edited to reflect actual implementation details). This living document can be stored in the repository (perhaps as ARCHITECTURE.md). It will detail file structures, module responsibilities, and data flow (e.g., how a patch goes from file to in-memory model to rendered symbol). A new contributor reading it should grasp the big picture quickly.
+
+By following this roadmap and adhering to these architecture principles, the project will evolve into a powerful, user-friendly circuit design editor. Each phase’s deliverables build upon the previous, and the emphasis on modular design and compatibility ensures that both the end-users (circuit designers) and the developers (maintainers and contributors) benefit from a robust, extensible platform. The end result will be an IDE-like schematic editor reminiscent of VS Code in workflow, powered by JointJS for interactivity and PrimeNG for a polished UI, with the domain intelligence of tscircuit’s ecosystem – a modern tool for electronic design that is both easy to use and a joy to develop on.

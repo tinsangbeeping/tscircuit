@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "metadata": {
+    "name": "Test LED Circuit",
+    "description": "Simple LED with resistor",
+    "version": "1.0.0",
+    "createdAt": "2025-12-12T09:16:01.650Z",
+    "modifiedAt": "2025-12-12T09:16:01.682Z"
+  },
+  "components": [
+    {
+      "id": "r1",
+      "name": "R1",
+      "type": "resistor",
+      "properties": {
+        "resistance": "220ohm"
+      },
+      "position": {
+        "x": 100,
+        "y": 100
+      }
+    },
+    {
+      "id": "led1",
+      "name": "LED1",
+      "type": "led",
+      "properties": {
+        "color": "red"
+      },
+      "position": {
+        "x": 200,
+        "y": 100
+      }
+    }
+  ],
+  "nets": [
+    {
+      "id": "net1",
+      "name": "vcc",
+      "connections": [
+        {
+          "componentId": "r1",
+          "pinName": "pin1"
+        },
+        {
+          "componentId": "led1",
+          "pinName": "pin1"
+        }
+      ]
+    },
+    {
+      "id": "net2",
+      "name": "gnd",
+      "connections": [
+        {
+          "componentId": "r1",
+          "pinName": "pin2"
+        },
+        {
+          "componentId": "led1",
+          "pinName": "pin2"
+        }
+      ]
+    }
+  ],
+  "interfacePins": [
+    {
+      "id": "vcc_pin",
+      "name": "VCC",
+      "position": "top",
+      "internalNetName": "vcc",
+      "type": "power"
+    },
+    {
+      "id": "gnd_pin",
+      "name": "GND",
+      "position": "bottom",
+      "internalNetName": "gnd",
+      "type": "ground"
+    }
+  ]
+}
